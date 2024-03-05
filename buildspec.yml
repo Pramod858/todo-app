@@ -6,13 +6,6 @@ env:
     DOCKER_REGISTRY_PASSWORD: /app/docker_credentials/password
     DOCKER_REGISTRY_URL: /app/docker_credentials/url
 phases:
-  install:
-    runtime-versions:
-      python: 3.11
-  pre_build:
-    commands:
-      - echo "Installing dependencies..."
-      - pip install -r requirements.txt
   build:
     commands:
       - echo "Running tests..."
