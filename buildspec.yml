@@ -22,12 +22,14 @@ phases:
       - sh $pwd
       - unzip ./sonar-scanner-cli-5.0.1.3006-linux.zip
       - ls $pwd
-      - export PATH=$PATH:./sonar-scanner-cli-5.0.1.3006-linux/bin/
+      - export PATH=$PATH:/sonar-scanner-cli-5.0.1.3006-linux/bin/
+      - ls $pwd
   build:
     commands:
       - echo "Build phase ..."
       - echo "SonarQube Scanner Phase Started ..."
       - sonar-scanner -Dsonar.login=$LOGIN -Dsonar.host.url=$HOST -Dsonar.projectKey=$Project -Dsonar.organization=$Organization
+      - echo "Login Successfull ..."
       - sleep 5
       - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=$Project >result.json
       - cat result.json
