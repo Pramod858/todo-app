@@ -22,8 +22,7 @@ phases:
       - sh $pwd
       - unzip ./sonar-scanner-cli-5.0.1.3006-linux.zip
       - ls $pwd
-      - export PATH=$PATH:/sonar-scanner-cli-5.0.1.3006-linux/bin/
-      - ls $pwd
+      - export PATH=$PATH:./sonar-scanner-5.0.1.3006-linux/bin/
   build:
     commands:
       - echo "Build phase ..."
