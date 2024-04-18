@@ -6,34 +6,34 @@ env:
     DOCKER_REGISTRY_PASSWORD: /app/docker_credentials/password
     DOCKER_REGISTRY_URL: /app/docker_credentials/url
 
-  # secrets-manager:
-  #   LOGIN: local/sonar:sonartoken
-  #   HOST: local/sonar:HOST
-  #   Organization: local/sonar:Organization
-  #   Project: local/sonar:Project
+  secrets-manager:
+    LOGIN: local/sonar:sonartoken
+    HOST: local/sonar:HOST
+    Organization: local/sonar:Organization
+    Project: local/sonar:Project
 phases:
   pre_build:
     commands:
-  #     - echo "Pre build phase..."
-  #     - apt-get update
-  #     - apt-get install -y jq
-  #     - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
-  #     - echo "Current path is >>>"
-  #     - sh $pwd
-  #     - unzip ./sonar-scanner-cli-5.0.1.3006-linux.zip
-  #     - ls $pwd
-  #     - export PATH=$PATH:./sonar-scanner-5.0.1.3006-linux/bin/
-  # build:
-  #   commands:
-  #     - echo "Build phase ..."
-  #     - echo "SonarQube Scanner Phase Started ..."
-  #     - sonar-scanner -Dsonar.login=$LOGIN -Dsonar.host.url=$HOST -Dsonar.projectKey=$Project -Dsonar.organization=$Organization
-  #     - echo "Login Successfull ..."
-  #     - sleep 5
-  #     - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=$Project >result.json
-  #     - cat result.json
-  #     - if [ $(jq -r '.projectStatus.status' result.json) = ERROR ] ; then $CODEBUILD_BUILD_SUCCEEDING -eq 0 ;fi
-  #     - echo "SonarQube Scanner Phase Completed ..."
+      - echo "Pre build phase..."
+      - apt-get update
+      - apt-get install -y jq
+      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+      - echo "Current path is >>>"
+      - sh $pwd
+      - unzip ./sonar-scanner-cli-5.0.1.3006-linux.zip
+      - ls $pwd
+      - export PATH=$PATH:./sonar-scanner-5.0.1.3006-linux/bin/
+  build:
+    commands:
+      - echo "Build phase ..."
+      - echo "SonarQube Scanner Phase Started ..."
+      - sonar-scanner -Dsonar.login=$LOGIN -Dsonar.host.url=$HOST -Dsonar.projectKey=$Project -Dsonar.organization=$Organization
+      - echo "Login Successfull ..."
+      - sleep 5
+      - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=$Project >result.json
+      - cat result.json
+      - if [ $(jq -r '.projectStatus.status' result.json) = ERROR ] ; then $CODEBUILD_BUILD_SUCCEEDING -eq 0 ;fi
+      - echo "SonarQube Scanner Phase Completed ..."
       - echo "Building Docker image..."
       - echo "$DOCKER_REGISTRY_PASSWORD" | docker login -u "$DOCKER_REGISTRY_USERNAME" --password-stdin "$DOCKER_REGISTRY_URL"
       - docker build -t "$DOCKER_REGISTRY_URL/$DOCKER_REGISTRY_USERNAME/todo-app:latest" .
