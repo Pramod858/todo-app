@@ -1,16 +1,18 @@
 version: 0.2
 
 env:
+  variables:
+    CONTAINER_NAME: "to-do"  # The name of your ECS container
   secrets-manager:
-    LOGIN: local:sonartoken
-    HOST: local:HOST
-    Organization: local:Organization
-    Project: local:Project
+    LOGIN: sonar:sonartoken
+    HOST: sonar:HOST
+    Organization: sonar:Organization
+    Project: sonar:Project
 
 phases:
   install:
     commands:
-      - echo "===== [Pre-build Phase] Installing Dependencies ====="
+      - echo "===== [Install Phase] Installing Dependencies ====="
       - apt-get update
       - apt-get install -y jq
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.0.0.4432-linux.zip
@@ -26,7 +28,6 @@ phases:
       - echo "===== [Pre-build Phase] Starting SonarQube Scan ====="
       - echo "Scanning project with SonarQube..."
       - $SONAR_SCANNER_HOME/bin/sonar-scanner -Dsonar.token="$LOGIN" -Dsonar.host.url="$HOST" -Dsonar.projectKey="$Project" -Dsonar.organization="$Organization" || exit 1
-
       - echo "SonarQube scan completed successfully."
       - sleep 5
       - echo "Checking SonarQube Quality Gate status..."
@@ -58,10 +59,15 @@ phases:
       - echo "Pushing Docker image..."
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
       - echo "Docker image pushed successfully."
+
+      - echo "Generating imagedefinitions.json for ECS deployment..."
+      - echo "[{\"name\":\"$CONTAINER_NAME\",\"imageUri\":\"$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG\"}]" > imagedefinitions.json
+      - echo "imagedefinitions.json file created successfully."
       - echo "Build completed on $(date)"
 
 artifacts:
-   files:
+  files:
+    - "imagedefinitions.json"
     - "**/*"
-   name: "builds/${CODEBUILD_BUILD_NUMBER}/my-artifacts"
-   discard-paths: no
+  name: "builds/${CODEBUILD_BUILD_NUMBER}/my-artifacts"
+  discard-paths: no
