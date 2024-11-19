@@ -1,6 +1,5 @@
 # Todo-app
-
-![Screenshot 2024-03-05 232756](https://github.com/Pramod858/todo-app/assets/80105491/3f1940fa-93f9-4eb1-b7a5-792479195b9d)
+![Screenshot (90)](https://github.com/user-attachments/assets/5859f7d3-046b-40b5-acc8-d2708fcaf8b2)
 <br>
 ![Screenshot 2024-03-06 205522](https://github.com/Pramod858/todo-app/assets/80105491/abdf7a22-3606-4ee2-94a3-633af16c5560)
 <br>
