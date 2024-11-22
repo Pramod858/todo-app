@@ -3,6 +3,7 @@ version: 0.2
 env:
   variables:
     CONTAINER_NAME: "to-do"  # The name of your ECS container
+    IMAGE_TAG: "build-${CODEBUILD_BUILD_ID##*:}"
   secrets-manager:
     LOGIN: sonar:sonartoken
     HOST: sonar:HOST
